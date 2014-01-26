@@ -1,0 +1,33 @@
+[user]
+    name = miningold
+    email = rynldsrap@gmail.com
+[alias]
+    co = checkout
+    ci = commit
+    br = branch
+    st = status
+    ss = status -s
+    au = add -u
+    aa = add -A
+
+    lg = log --oneline --decorate
+
+    ltag = !sh -c 'git describe --tags `git rev-list --tags --max-count=1`'
+
+    lgl = !sh -c 'git lgs $(git ltag)'
+
+    # show logs since a commit
+    lgs = !sh -c 'git lg $1..HEAD' -
+
+    # rebase instead of merge updates and list the most recent commits
+    up = !sh -c 'git pull --rebase --prune && git lg ORIG_HEAD..'
+
+    # shows diff of files and there status
+    df = diff --name-status
+
+    # list all files that have changed between provided commit and HEAD e.g. git since v2.1
+    since = !sh -c 'git df $1 HEAD' -
+[push]
+    default = simple
+[core]
+    excludesfile = ~/.gitignore_global
