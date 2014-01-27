@@ -72,10 +72,12 @@ function __prompt_command() {
     # currrent git branch and dirty state
     local GIT_PS1=$(__git_ps1 " (%s)")
 
-    local RESET="\[\e[m\]"
+    local DEFAULT="\[\e[m\]"
     local CYAN="\[\e[36m\]"
     local GREEN="\[\e[32m\]"
     local YELLOW="\[\e[33;1m\]"
 
-    PS1+="$CYAN\u$RESET@$GREEN\h $YELLOW$SHORT_PATH$GIT_PS1$RESET\n\$ "
+    # username@host working_dir (git_branch)
+    # $
+    PS1+="$CYAN\u$DEFAULT@$GREEN\h $YELLOW$SHORT_PATH$GIT_PS1$DEFAULT\n\$ "
 }
