@@ -61,8 +61,13 @@ function __prompt_command() {
         PS1+="\[\e[1;31m\]$EXIT\[\e[m\] "
     fi
 
-    # working directory with paths shortened to two characters and $HOME replaced with '~'
-    local SHORT_PATH=$(echo "$PWD" | sed -E -e 's|'$HOME'|~|' -e 's|/(..)[^/]*|/\1|g')
+    # Working directory with $HOME replaced with ~
+    local SHORT_PATH=$(echo "$PWD" | sed -E 's|'$HOME'|~|')
+
+    # Shorten dirnames to 2 characters if SHORT_PATH length is greather than 20
+    if [ ${#SHORT_PATH} -gt 20 ]; then
+        SHORT_PATH=$(echo $SHORT_PATH | sed -E 's|/(..)[^/]*|/\1|g')
+    fi
 
     # currrent git branch and dirty state
     local GIT_PS1=$(__git_ps1 " (%s)")
