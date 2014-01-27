@@ -61,12 +61,16 @@ function __prompt_command() {
         PS1+="\[\e[1;31m\]$EXIT\[\e[m\] "
     fi
 
+    # working directory with paths shortened to two characters and $HOME replaced with '~'
     local SHORT_PATH=$(echo "$PWD" | sed -E -e 's|'$HOME'|~|' -e 's|/(..)[^/]*|/\1|g')
+
+    # currrent git branch and dirty state
+    local GIT_PS1=$(__git_ps1 " (%s)")
 
     local RESET="\[\e[m\]"
     local CYAN="\[\e[36m\]"
     local GREEN="\[\e[32m\]"
     local YELLOW="\[\e[33;1m\]"
 
-    PS1+=$CYAN'\u'$RESET'@'$GREEN'\h '$YELLOW$SHORT_PATH'$(__git_ps1 " (%s)")'$RESET'\n\$ '
+    PS1+="$CYAN\u$RESET@$GREEN\h $YELLOW$SHORT_PATH$GIT_PS1$RESET\n\$ "
 }
