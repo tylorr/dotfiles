@@ -64,9 +64,9 @@ function __prompt_command() {
     # Working directory with $HOME replaced with ~
     local short_path=$(echo "$PWD" | sed -E 's|'$HOME'|~|')
 
-    # Shorten dirnames to 2 characters if SHORT_PATH length is greather than 20
-    if [ ${#SHORT_PATH} -gt 20 ]; then
-        SHort_path=$(echo $SHORT_PATH | sed -E 's|/(..)[^/]*|/\1|g')
+    # Shorten dirnames to 2 characters if short_path length is greather than 20
+    if [ ${#short_path} -gt 20 ]; then
+        short_path=$(echo $short_path | sed -E 's|/(..)[^/]*|/\1|g')
     fi
 
     # currrent git branch and dirty state
