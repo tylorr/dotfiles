@@ -53,31 +53,31 @@ source ~/.git-prompt.sh
 export PROMPT_COMMAND=__prompt_command
 
 function __prompt_command() {
-    local EXIT="$?"
+    local exit="$?"
     PS1="\n"
 
     # prepend errno if it exists
-    if [ $EXIT != 0 ]; then
-        PS1+="\[\e[1;31m\]$EXIT\[\e[m\] "
+    if [ $exit != 0 ]; then
+        PS1+="\[\e[1;31m\]$exit\[\e[m\] "
     fi
 
     # Working directory with $HOME replaced with ~
-    local SHORT_PATH=$(echo "$PWD" | sed -E 's|'$HOME'|~|')
+    local short_path=$(echo "$PWD" | sed -E 's|'$HOME'|~|')
 
     # Shorten dirnames to 2 characters if SHORT_PATH length is greather than 20
     if [ ${#SHORT_PATH} -gt 20 ]; then
-        SHORT_PATH=$(echo $SHORT_PATH | sed -E 's|/(..)[^/]*|/\1|g')
+        SHort_path=$(echo $SHORT_PATH | sed -E 's|/(..)[^/]*|/\1|g')
     fi
 
     # currrent git branch and dirty state
-    local GIT_PS1=$(__git_ps1 " (%s)")
+    local git_ps1=$(__git_ps1 " (%s)")
 
-    local DEFAULT="\[\e[m\]"
-    local CYAN="\[\e[36m\]"
-    local GREEN="\[\e[32m\]"
-    local YELLOW="\[\e[33;1m\]"
+    local default="\[\e[m\]"
+    local cyan="\[\e[36m\]"
+    local green="\[\e[32m\]"
+    local yellow="\[\e[33;1m\]"
 
     # username@host working_dir (git_branch)
     # $
-    PS1+="$CYAN\u$DEFAULT@$GREEN\h $YELLOW$SHORT_PATH$GIT_PS1$DEFAULT\n\$ "
+    PS1+="$cyan\u$default@$green\h $yellow$short_path$git_ps1$default\n\$ "
 }
