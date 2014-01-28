@@ -66,7 +66,7 @@ function __prompt_command() {
 
     # Shorten dirnames to 2 characters if short_path length is greather than 20
     if [ ${#short_path} -gt 20 ]; then
-        short_path=$(echo $short_path | sed -E 's|/(.[^/]{0,1})[^/]*|/\1|g')
+        short_path=$(echo "$short_path" | sed -E 's|/(.[^/]{0,1})[^/]*|/\1|g')
     fi
 
     # currrent git branch and dirty state
