@@ -15,6 +15,7 @@ Bundle 'bling/vim-airline'
 Bundle 'tpope/vim-commentary'
 
 Bundle 'airblade/vim-gitgutter'
+Bundle 'ntpeters/vim-better-whitespace'
 
 filetype plugin indent on
 
@@ -35,15 +36,21 @@ set laststatus=2
 set nrformats=
 
 if has('gui_running')
-  set guifont=Inconsolata\ for\ Powerline:h11
+  silent! set guifont=Inconsolata\ for\ Powerline:h11
+  if &guifont != 'Inconsolata for Powerline:h11'
+    set guifont=*
+  endif
+
+  set lines=50
+  set columns=100
 endif
 
 syntax on
 colorscheme candyman
 
 " backup/persistence
-set undodir=~/.vim/tmp/undo//
-set backupdir=~/.vim/tmp/backup//
+" set undodir=~/.vim/tmp/undo//
+" set backupdir=~/.vim/tmp/backup//
 set backup
 
 " persist undo tree between sessions
@@ -99,3 +106,6 @@ augroup LineNumber
   autocmd FocusGained * :set relativenumber
 augroup END
 
+
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
