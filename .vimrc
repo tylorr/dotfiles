@@ -32,6 +32,9 @@ set incsearch
 set encoding=utf8
 set laststatus=2
 
+" shortcuts
+nnoremap <leader><space> :noh<cr>
+
 " treat all numerals as decimal for <C-a> and <C-x>
 set nrformats=
 
@@ -49,8 +52,6 @@ syntax on
 colorscheme candyman
 
 " backup/persistence
-" set undodir=~/.vim/tmp/undo//
-" set backupdir=~/.vim/tmp/backup//
 set backup
 
 " persist undo tree between sessions
@@ -69,8 +70,12 @@ augroup line_return
 augroup END
 
 " open vimrc
-nnoremap <leader>v :e ~/.vimrc<CR>
-nnoremap <leader>V :tabnew ~/.vimrc<CR>
+nnoremap <leader>v :e $MYVIMRC<CR>
+nnoremap <leader>V :tabnew $MYVIMRC<CR>
+
+augroup vim_source
+  autocmd bufwritepost .vimrc so $MYVIMRC
+augroup END
 
 " airline settings
 if !exists("g:airline_symbols")
@@ -106,6 +111,11 @@ augroup LineNumber
   autocmd FocusGained * :set relativenumber
 augroup END
 
-
+" Center screen when scrolling with C-d and C-u
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
+
+nnoremap : :set norelativenumber<cr>:
+nnoremap / :set norelativenumber<cr>/
+nnoremap ? :set norelativenumber<cr>?
+
