@@ -52,12 +52,12 @@ syntax on
 colorscheme candyman
 
 " backup/persistence
-set backup
+" set backup
 
 " persist undo tree between sessions
-set undofile
-set history=100
-set undolevels=100
+" set undofile
+" set history=100
+" set undolevels=100
 
 " Open file to previous location
 augroup line_return
@@ -109,6 +109,11 @@ augroup LineNumber
 
   autocmd FocusLost * :set norelativenumber
   autocmd FocusGained * :set relativenumber
+augroup END
+
+augroup Encrypted
+  au!
+  autocmd BufReadPost * if &key != "" | set noswapfile nowritebackup viminfo= nobackup noshelltemp history=0 secure | endif
 augroup END
 
 " Center screen when scrolling with C-d and C-u

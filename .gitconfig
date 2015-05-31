@@ -1,33 +1,53 @@
 [user]
-    name = miningold
-    email = rynldsrap@gmail.com
-[alias]
-    co = checkout
-    ci = commit
-    br = branch
-    st = status
-    ss = status -s
-    au = add -u
-    aa = add -A
-
-    lg = log --oneline --decorate
-
-    ltag = !sh -c 'git describe --tags `git rev-list --tags --max-count=1`'
-
-    lgl = !sh -c 'git lgs $(git ltag)'
-
-    # show logs since a commit
-    lgs = !sh -c 'git lg $1..HEAD' -
-
-    # rebase instead of merge updates and list the most recent commits
-    up = !sh -c 'git pull --rebase --prune && git lg ORIG_HEAD..'
-
-    # shows diff of files and there status
-    df = diff --name-status
-
-    # list all files that have changed between provided commit and HEAD e.g. git since v2.1
-    since = !sh -c 'git df $1 HEAD' -
-[push]
-    default = simple
+  name = tylorr
+  email = tylor@fastmail.com
+  signingkey = CF8845FE
 [core]
-    excludesfile = ~/.gitignore_global
+  autocrlf = input
+  editor = gvim
+  whitespace = nowarn
+  excludesfile = ~/.gitignore_global
+[push]
+  default = simple
+[diff "pandoc"]
+  textconv=pandoc --to=markdown
+  prompt = false
+[alias]
+  co = checkout
+  ci = commit
+  br = branch
+  st = status
+  ss = status -sb
+  au = add -u
+  aa = add -A .
+  fe = fetch
+  rb = rebase
+  rbc = rebase --continue
+
+  pr = pull --rebase
+  prl = !sh -c 'git pr && git lag -5 ORIG_HEAD..FETCH_HEAD'
+
+  lg = log --oneline --decorate
+  lag = log --pretty=format:\"%C(cyan)%an%Creset %s %Cgreen(%cr)%Creset\"
+
+  ltag = !sh -c 'git describe --tags `git rev-list --tags --max-count=1`'
+
+  lgl = !sh -c 'git lgs $(git ltag)'
+
+  # show logs since a commit
+  lgs = !sh -c 'git lg $1..HEAD' -
+
+  # shows diff of files and there status
+  df = diff --name-status
+  dw = diff --word-diff
+
+  # list all files that have changed between provided commit and HEAD e.g. git since v2.1
+  since = !sh -c 'git df $1 HEAD' -
+
+  sa = stash apply
+  sr = !sh -c 'git stash show -p | git apply -R'
+
+  # list all files that have changed between provided commit and HEAD e.g. git since v2.1
+  since = !sh -c 'git df $1 HEAD' -
+
+  wdiff = diff --word-diff=color --unified=1
