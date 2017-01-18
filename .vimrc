@@ -12,6 +12,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'edkolev/tmuxline.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'majutsushi/tagbar'
 Plug 'mileszs/ack.vim'
@@ -24,8 +25,11 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'Valloric/YouCompleteMe'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-syntastic/syntastic'
-Plug 'xolox/vim-easytags'
+" Plug 'xolox/vim-easytags'
+Plug 'tylorr/vim-easytags'
 Plug 'xolox/vim-misc'
 
 call plug#end()
@@ -39,7 +43,6 @@ set expandtab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
-set hlsearch
 set textwidth=78
 set ruler
 set relativenumber
@@ -53,6 +56,9 @@ set incsearch
 set hlsearch
 set ignorecase
 set smartcase
+set splitright
+set splitbelow
+set autoread
 
 let mapleader="\<Space>"
 
@@ -62,6 +68,8 @@ nnoremap <leader>u :GundoToggle<CR>
 nnoremap <leader><space> :nohlsearch<CR>
 nnoremap <leader>s :Obsess ~/.vim/session.vim<CR>
 nnoremap <leader>S :source ~/.vim/session.vim<CR>
+nnoremap <leader>l :SyntasticCheck<CR>
+nnoremap <leader>L :SyntasticToggleMode<CR>
 nnoremap <leader>a :Ack 
 nnoremap <leader>t :TagbarToggle<CR>
 
@@ -70,9 +78,9 @@ nnoremap <c-d> <c-d>zz
 nnoremap <c-u> <c-u>zz
 
 " not sure if I need these
-nnoremap : :set norelativenumber<CR>:
-nnoremap / :set norelativenumber<CR>/
-nnoremap ? :set norelativenumber<CR>?
+" nnoremap : :set norelativenumber<CR>:
+" nnoremap / :set norelativenumber<CR>/
+" nnoremap ? :set norelativenumber<CR>?
 
 nnoremap j gj
 nnoremap k gk
@@ -81,14 +89,39 @@ nnoremap k gk
 nnoremap gV `[v`]
 inoremap jk <esc>
 
+if !has('win32unix')
+  inoremap <esc> <nop>
+  inoremap <esc>^[ <esc>^[
+endif
+
 let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 
+let g:syntastic_mode_map = { "mode": "active", "passive_filetypes": ["php"] }
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['eslint']
+
 let g:easytags_async = 1
 
+let g:tmuxline_powerline_separators = 0
+let g:tmuxline_separators = {
+      \ 'left' : '>',
+      \ 'left_alt': '>',
+      \ 'right' : '<',
+      \ 'right_alt' : '<',
+      \ 'space' : ' '}
+
 if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g "" | dos2unix'
+  if has('win32unix')
+    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g "" | dos2unix'
+  else
+    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+  endif
+
   let g:ackprg = 'ag --vimgrep'
 endif
 
@@ -128,8 +161,8 @@ augroup line_number
   autocmd InsertLeave * :set relativenumber
 
   if !has('win32unix')
-    autocmd FocusLost * :set norelativenumber
-    autocmd FocusGained * :set relativenumber
+    " autocmd FocusLost * :set norelativenumber
+    " autocmd FocusGained * :set relativenumber
   endif
 augroup end
 
@@ -151,5 +184,7 @@ augroup end
 augroup language_config
   au!
   autocmd FileType cs setlocal ts=4 sts=4 sw=4 noexpandtab
+  autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+  autocmd FileType php setlocal ts=4 sts=4 sw=4 noexpandtab
 augroup END
 
