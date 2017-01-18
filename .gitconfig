@@ -4,7 +4,7 @@
   signingkey = CF8845FE
 [core]
   autocrlf = input
-  editor = gvim
+  editor = vim
   whitespace = nowarn
   excludesfile = ~/.gitignore_global
 [push]
@@ -19,20 +19,20 @@
   st = status
   ss = status -sb
   au = add -u
-  aa = add -A .
+  aa = add -A
   fe = fetch
   rb = rebase
   rbc = rebase --continue
 
+  k = "!gitk --all $* &"
+
   pr = pull --rebase
   prl = !sh -c 'git pr && git lag -5 ORIG_HEAD..FETCH_HEAD'
 
+  prs = "!git fetch; git rebase FETCH_HEAD --autostash"
+
   lg = log --oneline --decorate
   lag = log --pretty=format:\"%C(cyan)%an%Creset %s %Cgreen(%cr)%Creset\"
-
-  ltag = !sh -c 'git describe --tags `git rev-list --tags --max-count=1`'
-
-  lgl = !sh -c 'git lgs $(git ltag)'
 
   # show logs since a commit
   lgs = !sh -c 'git lg $1..HEAD' -
@@ -42,12 +42,22 @@
   dw = diff --word-diff
 
   # list all files that have changed between provided commit and HEAD e.g. git since v2.1
-  since = !sh -c 'git df $1 HEAD' -
-
-  sa = stash apply
-  sr = !sh -c 'git stash show -p | git apply -R'
-
-  # list all files that have changed between provided commit and HEAD e.g. git since v2.1
-  since = !sh -c 'git df $1 HEAD' -
+  since = "!f() { git df $1 HEAD; }; f"
 
   wdiff = diff --word-diff=color --unified=1
+
+  fixup = commit --fixup
+  squash = rebase -i --autostash --autosquash
+  sha = show --pretty=format:"%H" -q
+  inject = "!f() { set -e; SHA=$(git sha $1); shift; git fixup $SHA $*; git squash $SHA~; }; f"
+
+  commend = commit --amend --no-edit
+
+  stsh = stash --keep-index
+  staash = stash --include-untracked
+  staaash = stash --all
+
+  merc = merge --no-ff
+
+  grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+
