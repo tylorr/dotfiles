@@ -1,93 +1,112 @@
-set nocompatible
-filetype off
+if has('win32')
+  set rtp+=~/.vim
+endif
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" core plugins
-Bundle 'gmarik/vundle'
-Bundle 'flazz/vim-colorschemes'
-Bundle 'kien/ctrlp.vim'
+call plug#begin('~/.vim/plugged')
 
-" main plugins
-Bundle 'sjl/gundo.vim'
-Bundle 'bling/vim-airline'
-Bundle 'tpope/vim-commentary'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'flazz/vim-colorschemes'
+Plug 'majutsushi/tagbar'
+Plug 'mileszs/ack.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'sjl/badwolf'
+Plug 'sjl/gundo.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'vim-syntastic/syntastic'
+Plug 'xolox/vim-easytags'
+Plug 'xolox/vim-misc'
 
-Bundle 'airblade/vim-gitgutter'
-Bundle 'ntpeters/vim-better-whitespace'
+call plug#end()
 
+syntax enable
 filetype plugin indent on
+
+colorscheme badwolf
 
 set expandtab
 set tabstop=2
+set softtabstop=2
 set shiftwidth=2
 set hlsearch
 set textwidth=78
-set backspace=indent,eol,start
 set ruler
 set relativenumber
 set number
 set incsearch
-set encoding=utf8
-set laststatus=2
+set showcmd
+set cursorline
+set wildmenu
+set lazyredraw
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
 
-" shortcuts
-nnoremap <leader><space> :noh<cr>
+let mapleader="\<Space>"
 
-" treat all numerals as decimal for <C-a> and <C-x>
-set nrformats=
-
-if has('gui_running')
-  silent! set guifont=Inconsolata\ for\ Powerline:h11
-  if &guifont != 'Inconsolata for Powerline:h11'
-    set guifont=*
-  endif
-
-  set lines=50
-  set columns=100
-endif
-
-syntax on
-colorscheme candyman
-
-" backup/persistence
-" set backup
-
-" persist undo tree between sessions
-" set undofile
-" set history=100
-" set undolevels=100
-
-" Open file to previous location
-augroup line_return
-  au!
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"zvzz" |
-    \ endif
-
-augroup END
-
-" open vimrc
 nnoremap <leader>v :e $MYVIMRC<CR>
 nnoremap <leader>V :tabnew $MYVIMRC<CR>
+nnoremap <leader>u :GundoToggle<CR>
+nnoremap <leader><space> :nohlsearch<CR>
+nnoremap <leader>s :Obsess ~/.vim/session.vim<CR>
+nnoremap <leader>S :source ~/.vim/session.vim<CR>
+nnoremap <leader>a :Ack 
+nnoremap <leader>t :TagbarToggle<CR>
 
-augroup vim_source
-  autocmd bufwritepost .vimrc so $MYVIMRC
-augroup END
+nnoremap <c-n> :call NumberToggle()<CR>
+nnoremap <c-d> <c-d>zz
+nnoremap <c-u> <c-u>zz
 
-" airline settings
-if !exists("g:airline_symbols")
-  let g:airline_symbols = {}
+" not sure if I need these
+nnoremap : :set norelativenumber<CR>:
+nnoremap / :set norelativenumber<CR>/
+nnoremap ? :set norelativenumber<CR>?
+
+nnoremap j gj
+nnoremap k gk
+
+" highlight last inserted text
+nnoremap gV `[v`]
+inoremap jk <esc>
+
+let g:ctrlp_match_window = 'bottom,order:ttb'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 0
+
+let g:easytags_async = 1
+
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g "" | dos2unix'
+  let g:ackprg = 'ag --vimgrep'
 endif
 
-let g:airline_theme="powerlineish"
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#hunks#non_zero_only = 1
+if has('win32unix')
+  let &t_SI.="\e[5 q"
+  let &t_EI.="\e[1 q"
+else
+  " allows cursor change in tmux mode
+  if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  endif
+endif
 
-" Toggle relativenumber and number
+" toggle relativenumber and number
 function! NumberToggle()
   if(&relativenumber == 1)
     set norelativenumber
@@ -96,31 +115,41 @@ function! NumberToggle()
   endif
 endfunc
 
-" toggleables
-nnoremap <F3> :GitGutterToggle<CR>
-nnoremap <F4> :GundoToggle<CR>
-nnoremap <C-n> :call NumberToggle()<cr>
+" reload .vimrc when changed
+augroup vim_source
+  au!
+  autocmd BufWritePost .vimrc so $MYVIMRC
+augroup end
 
-" Linenumber swapping
-augroup LineNumber
+" linenumber swapping
+augroup line_number
   au!
   autocmd InsertEnter * :set norelativenumber
   autocmd InsertLeave * :set relativenumber
 
-  autocmd FocusLost * :set norelativenumber
-  autocmd FocusGained * :set relativenumber
-augroup END
+  if !has('win32unix')
+    autocmd FocusLost * :set norelativenumber
+    autocmd FocusGained * :set relativenumber
+  endif
+augroup end
 
-augroup Encrypted
+" turn off backup and history for encrypted files
+augroup encrypted
   au!
   autocmd BufReadPost * if &key != "" | set noswapfile nowritebackup viminfo= nobackup noshelltemp history=0 secure | endif
+augroup end
+
+" open file to previous location
+augroup line_return
+  au!
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"zvzz" |
+    \ endif
+augroup end
+
+augroup language_config
+  au!
+  autocmd FileType cs setlocal ts=4 sts=4 sw=4 noexpandtab
 augroup END
-
-" Center screen when scrolling with C-d and C-u
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
-
-nnoremap : :set norelativenumber<cr>:
-nnoremap / :set norelativenumber<cr>/
-nnoremap ? :set norelativenumber<cr>?
 
