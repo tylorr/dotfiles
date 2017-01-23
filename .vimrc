@@ -16,7 +16,9 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'majutsushi/tagbar'
 Plug 'mileszs/ack.vim'
+Plug 'mtth/scratch.vim'
 Plug 'pangloss/vim-javascript'
+Plug 'scrooloose/nerdtree'
 Plug 'sjl/badwolf'
 Plug 'sjl/gundo.vim'
 Plug 'tpope/vim-commentary'
@@ -59,8 +61,11 @@ set smartcase
 set splitright
 set splitbelow
 set autoread
+set hidden
 
 let mapleader="\<Space>"
+
+cabbr <expr> %% expand('%:p:h')
 
 nnoremap <leader>v :e $MYVIMRC<CR>
 nnoremap <leader>V :tabnew $MYVIMRC<CR>
@@ -72,6 +77,10 @@ nnoremap <leader>l :SyntasticCheck<CR>
 nnoremap <leader>L :SyntasticToggleMode<CR>
 nnoremap <leader>a :Ack 
 nnoremap <leader>t :TagbarToggle<CR>
+nnoremap <leader>r :CtrlPBufTag<CR>
+nnoremap <leader>R :CtrlPBufTagAll<CR>
+nnoremap <leader>ne :NERDTreeToggle<CR>
+nnoremap <leader>nf :NERDTreeFind<CR>
 
 nnoremap <c-n> :call NumberToggle()<CR>
 nnoremap <c-d> <c-d>zz
@@ -88,6 +97,8 @@ nnoremap k gk
 " highlight last inserted text
 nnoremap gV `[v`]
 inoremap jk <esc>
+
+vnoremap // y/<C-R>"<CR>
 
 if !has('win32unix')
   inoremap <esc> <nop>
@@ -114,6 +125,15 @@ let g:tmuxline_separators = {
       \ 'right' : '<',
       \ 'right_alt' : '<',
       \ 'space' : ' '}
+
+let g:scratch_persistence_file = '~/.vim/scratch.vim'
+
+" let g:easytags_languages = {
+" \   'javascript': {
+" \     'cmd': 'es-ctags',
+" \     'stdout_opt': '-f - ',
+" \   }
+" \}
 
 if executable('ag')
   if has('win32unix')
