@@ -33,6 +33,7 @@ Plug 'vim-syntastic/syntastic'
 " Plug 'xolox/vim-easytags'
 Plug 'tylorr/vim-easytags'
 Plug 'xolox/vim-misc'
+Plug 'chaoren/vim-wordmotion'
 
 call plug#end()
 
@@ -75,7 +76,7 @@ nnoremap <leader>s :Obsess ~/.vim/session.vim<CR>
 nnoremap <leader>S :source ~/.vim/session.vim<CR>
 nnoremap <leader>l :SyntasticCheck<CR>
 nnoremap <leader>L :SyntasticToggleMode<CR>
-nnoremap <leader>a :Ack 
+nnoremap <leader>a :Ack! 
 nnoremap <leader>t :TagbarToggle<CR>
 nnoremap <leader>r :CtrlPBufTag<CR>
 nnoremap <leader>R :CtrlPBufTagAll<CR>
@@ -94,6 +95,11 @@ nnoremap <c-u> <c-u>zz
 nnoremap j gj
 nnoremap k gk
 
+xnoremap io iw
+xnoremap ao aw
+onoremap io iw
+onoremap ao aw
+
 " highlight last inserted text
 nnoremap gV `[v`]
 inoremap jk <esc>
@@ -105,9 +111,19 @@ if !has('win32unix')
   inoremap <esc>^[ <esc>^[
 endif
 
+" custom text-object for numerical values
+function! Numbers()
+    call search('\d\([^0-9\.]\|$\)', 'cW')
+    normal v
+    call search('\(^\|[^0-9\.]\d\)', 'becW')
+endfunction
+xnoremap in :<C-u>call Numbers()<CR>
+onoremap in :normal vin<CR>
+
 let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
+let g:ctrlp_buftag_types = { 'javascript': '--language-force=javascript --javascript-types=fcmvg' }
 
 let g:syntastic_mode_map = { "mode": "active", "passive_filetypes": ["php"] }
 let g:syntastic_always_populate_loc_list = 1
