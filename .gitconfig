@@ -16,7 +16,7 @@
   co = checkout
   ci = commit
   br = branch
-  st = status
+  st = 
   ss = status -sb
   au = add -u
   aa = add -A
@@ -33,6 +33,7 @@
 
   lg = log --oneline --decorate
   lag = log --pretty=format:\"%C(cyan)%an%Creset %s %Cgreen(%cr)%Creset\"
+  ll = log --graph --format=\"%C(yellow)%h%C(red)%d%C(reset) - %C(bold green)(%ar)%C(reset) %s %C(blue)<%an>%C(reset)\"
 
   # show logs since a commit
   lgs = !sh -c 'git lg $1..HEAD' -
@@ -57,6 +58,8 @@
   staash = stash --include-untracked
   staaash = stash --all
 
+  conflicts = diff --name-only --diff-filter=U
+
   merc = merge --no-ff
 
   grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
@@ -67,3 +70,27 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[diff]
+  tool = meld
+  renameLimit = 9180
+[difftool]
+  prompt = false
+[difftool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args \"$LOCAL\" \"$REMOTE\"
+[merge]
+  tool = unityyamlmerge
+[mergetool]
+  prompt = false
+[mergetool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output=\"$MERGED\"
+[mergetool "unityyamlmerge"]
+  trustExitCode = false
+  cmd = '/Applications/Unity/Hub/Editor/2018.2.17f1/Unity.app/Contents/Tools/UnityYAMLMerge' merge -p "$BASE" "$REMOTE" "$LOCAL" "$MERGED"
+
