@@ -1,6 +1,6 @@
 [user]
   name = tylorr
-  email = tylor@fastmail.com
+  email = mail@tylor.io
   signingkey = CF8845FE
 [core]
   autocrlf = input
@@ -16,7 +16,7 @@
   co = checkout
   ci = commit
   br = branch
-  st = 
+  st = status
   ss = status -sb
   au = add -u
   aa = add -A
@@ -57,6 +57,8 @@
   stsh = stash --keep-index
   staash = stash --include-untracked
   staaash = stash --all
+
+  stush = stash --keep-index --include-untracked
 
   conflicts = diff --name-only --diff-filter=U
 
