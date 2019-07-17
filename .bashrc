@@ -49,9 +49,9 @@ unset env
 
 # Git prompt and completion
 
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
 export GIT_PS1_SHOWDIRTYSTATE=1
-source ~/.git-completion.bash
-source ~/.git-prompt.sh
 
 # Custom bash prompt
 
@@ -88,9 +88,9 @@ function __prompt_command() {
 }
 
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 eval "$(fasd --init auto)"
 
-. $(brew --prefix)/opt/fzf/shell/key-bindings.bash
 export FZF_DEFAULT_COMMAND='fd --type f --color=never'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND='fd --type d . --color=never'
