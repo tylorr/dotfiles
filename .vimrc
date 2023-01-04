@@ -31,7 +31,7 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-syntastic/syntastic'
 " Plug 'xolox/vim-easytags'
-Plug 'tylorr/vim-easytags'
+" Plug 'tylorr/vim-easytags'
 Plug 'xolox/vim-misc'
 Plug 'chaoren/vim-wordmotion'
 
